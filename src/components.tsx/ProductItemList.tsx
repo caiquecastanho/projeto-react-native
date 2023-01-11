@@ -4,10 +4,14 @@ import { View, Text } from "react-native";
 import { ItemProduct } from "../service/ProductService";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
-export default class ProductItemList extends React.Component<{product: ItemProduct}, any>{
-    constructor(props: {product: ItemProduct}){
+export default class ProductItemList extends React.Component<{product: ItemProduct, navigate: (route: string, parameter: any) => void}, any>{
+    constructor(props: {product: ItemProduct, navigate: () => void}){
         super(props);
     }
+
+    navigateToProductDetail = (product: ItemProduct) => {
+        this.props.navigate('ProductDetail', {product});
+    } 
 
     render(): JSX.Element {
         const product = this.props.product;
@@ -23,7 +27,7 @@ export default class ProductItemList extends React.Component<{product: ItemProdu
                     <Text style={{flex: 1, paddingTop: 10}}>{`Preço: R$${product.price}`}</Text>
                 </View>
                 <View style={{flex: 1, justifyContent: 'center', alignItems: 'flex-end', padding: 10}}>
-                    <Icon name='chevron-right' size={36}/>
+                    <Icon onPress={() => this.navigateToProductDetail(product)} name='chevron-right' size={36}/>
                 </View>
             </View>
             <Divider leadingInset={16} />

@@ -20,13 +20,17 @@ export default class ProductsScreen extends React.Component<any,ProductsScreenSt
     this.loadProductsList();
   }
 
-  async loadProductsList(): Promise<void> {
+  async loadProductsList(reload?: boolean): Promise<void> {
+    if(reload){
+      this.offset = 1;
+    }
     try {
         const {token} = this.context as AuthContextType;
         this.setState({isLoading: true})
         const storeProductsResponse: StoreProductsResponse = await listProducts(ProductsScreen.PER_PAGE, this.offset, token);
         console.log(storeProductsResponse);
-        this.setState({ products: this.state.products.concat(storeProductsResponse.products), isLoading: false, totalItems: storeProductsResponse.totalItems });
+        const newListProducts = reload ? storeProductsResponse.products : this.state.products.concat(storeProductsResponse.products);
+        this.setState({ products: newListProducts, isLoading: false, totalItems: storeProductsResponse.totalItems });
     } catch (error) {
       console.log(error.message);
     }
@@ -52,7 +56,7 @@ export default class ProductsScreen extends React.Component<any,ProductsScreenSt
 
   renderProduct(product: ItemProduct): JSX.Element {
     return (
-        <ProductItemList product={product}/>
+        <ProductItemList product={product} navigate={this.props.navigation.navigate}/>
     );
   }
 
@@ -63,6 +67,8 @@ export default class ProductsScreen extends React.Component<any,ProductsScreenSt
         <FlatList
           data={products}
           renderItem={({ item }) => this.renderProduct(item)}
+          onRefresh={() => this.loadProductsList(true) }
+          refreshing={this.state.isLoading}
           onEndReached={() => this.loadMoreData()}
         />
       </View>

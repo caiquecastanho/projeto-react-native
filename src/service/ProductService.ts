@@ -28,7 +28,7 @@ const listProducts = async function(perPage: number, page: number, token: string
     });
 }
 
-const getProduct = async function (id: string): Promise<Product> {
+const getProduct = async function (id: string, token: string): Promise<Product> {
     return new Promise(async (resolve, reject) => {
         const path = BASE_PATH + '/storeProducts/product/';
         const headers = new Map<string, string>().set('Authorization', `Bearer ${token}`);
@@ -43,7 +43,7 @@ const getProduct = async function (id: string): Promise<Product> {
     });
 }
 
-const addFavorite = async function(id: string): Promise<void>{
+const addFavorite = async function(id: string, token: string): Promise<void>{
     return new Promise(async (resolve, reject) => {
         const path = BASE_PATH + '/storeProducts/manageFavorite';
         const headers = new Map<string, string>().set('Authorization', `Bearer ${token}`).set(

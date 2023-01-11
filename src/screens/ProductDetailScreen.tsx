@@ -1,13 +1,14 @@
 import { ActivityIndicator } from "@react-native-material/core";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { addFavorite, getProduct } from "../service/ProductService";
+import { addFavorite, getProduct, ItemProduct } from "../service/ProductService";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { AuthContext, AuthContextType } from "../contexts/AuthContext";
 
-export default class ProductDetailScreen extends React.Component<any, ProductScreenState>{
+export default class ProductDetailScreen extends React.Component<{product: ItemProduct}, ProductScreenState>{
 
     constructor(props: any){
         super(props);
@@ -27,9 +28,10 @@ export default class ProductDetailScreen extends React.Component<any, ProductScr
     }
 
     async loadProduct(): Promise<void>{
+        const {token} = this.context as AuthContextType;
         try{
             this.setState({isLoading: true});
-            const product: Product = await getProduct('62ce3e33a3c2b4b0af2f5a2a')
+            const product: Product = await getProduct(this.props.route.params.product._id, token)
             this.setState({product, isLoading: false, isFavorite: product.favorite});
         }catch(error){
             console.log(error);
@@ -38,9 +40,10 @@ export default class ProductDetailScreen extends React.Component<any, ProductScr
 
     async handleFavoriteChange(): Promise<void>{
         const {product} = this.state;
+        const {token} = this.context as AuthContextType;
         try{
             this.setState({isLoading: true});
-            await addFavorite(product!._id);
+            await addFavorite(product!._id, token);
             this.setState({isFavorite: !this.state.isFavorite, isLoading: false});
         }catch(error){
             console.log('Erro ao adicionar aos favoritos');
@@ -111,6 +114,8 @@ export default class ProductDetailScreen extends React.Component<any, ProductScr
         );
     }
 }
+
+ProductDetailScreen.contextType = AuthContext;
 
 type ProductScreenState = {
     product: Product | null,
