@@ -17,7 +17,7 @@ export default class LoginScreen extends React.Component<LoginProps, LoginState>
       const {authContextLogin} = this.context as AuthContextType;
       this.setState({isLoading: true});
       await authContextLogin(email, password);
-      this.props.navigation.navigate('Products');
+      //this.props.navigation.navigate('Products');
     }catch(error){
       console.log("Erro ao executar login");
     }

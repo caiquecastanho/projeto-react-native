@@ -1,6 +1,5 @@
-import React, { Children } from "react";
+import React from "react";
 import LoginController from "../controller/LoginController";
-import LoginScreen from "../screens/LoginScreen";
 import { LoginResponse } from "../service/LoginService";
 import { AuthContext } from "./AuthContext";
 
@@ -35,7 +34,7 @@ export default class AuthContextProvider extends React.Component<any, AuthContex
         });
     }
 
-    providerLogOff = async(): void => {
+    providerLogOff = async(): Promise<void> => {
 
     }
 

@@ -60,7 +60,7 @@ const addFavorite = async function(id: string, token: string): Promise<void>{
     });
 }
 
-const getFavorites = async function(): Promise<Product[]>{
+const getFavorites = async function(token: string): Promise<Product[]>{
     return new Promise(async (resolve, reject) => {
         const path = BASE_PATH + '/storeProducts/getFavProducts';
         const headers = new Map<string, string>().set('Authorization', `Bearer ${token}`)

@@ -2,6 +2,7 @@ import { ActivityIndicator } from "@react-native-material/core";
 import React from "react";
 import { View, FlatList } from "react-native";
 import ProductItemList from "../components.tsx/ProductItemList";
+import { AuthContext, AuthContextType } from "../contexts/AuthContext";
 import { getFavorites, ItemProduct } from "../service/ProductService";
 
 export default class FavoriteScreen extends React.Component<any, ProductsScreenState>{
@@ -11,9 +12,10 @@ export default class FavoriteScreen extends React.Component<any, ProductsScreenS
     }
 
     async loadFavorites(): Promise<void>{
+        const {token} = this.context as AuthContextType;
         try{
             this.setState({isLoading: true});
-            const products: Product[] = await getFavorites();
+            const products: Product[] = await getFavorites(token);
             const itemsProduct: ItemProduct[] = products.map((product) => {
                 const {_id, name, price} = product ;
                 const itemProduct: ItemProduct = {_id: _id, name: name, price: price, favorite: true};
@@ -41,7 +43,7 @@ export default class FavoriteScreen extends React.Component<any, ProductsScreenS
 
     renderProduct(itemProduct: ItemProduct): JSX.Element {
         return (
-            <ProductItemList product={itemProduct}/>
+            <ProductItemList product={itemProduct} navigate={this.props.navigation.navigate}/>
         );
     }
 
@@ -66,6 +68,8 @@ export default class FavoriteScreen extends React.Component<any, ProductsScreenS
         );
     }
 }
+
+FavoriteScreen.contextType = AuthContext;
 
 type ProductsScreenState = {
     products: ItemProduct[];

@@ -1,4 +1,4 @@
-import { ActivityIndicator } from "@react-native-material/core";
+import { ActivityIndicator, AppBar, IconButton } from "@react-native-material/core";
 import React from "react";
 import { View, FlatList, Text } from "react-native";
 import { ItemProduct, listProducts, StoreProductsResponse } from "../service/ProductService";
@@ -78,7 +78,7 @@ export default class ProductsScreen extends React.Component<any,ProductsScreenSt
   render(): JSX.Element {
     const {name} = this.context as AuthContextType;
     return (
-        <>
+        <>  
             {this.state.isLoading && this.renderLoading()}
             {!this.state.isLoading && this.renderList()}
         </>
