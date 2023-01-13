@@ -8,7 +8,7 @@ const login = async function(email: string, password: string): Promise<LoginResp
             "Content-Type",
             "application/x-www-form-urlencoded"
           ));
-        if(response.ok){
+        if(response.status === 200){
             const loginResponse: LoginResponse = await response.json();
             resolve(loginResponse);
         }else{

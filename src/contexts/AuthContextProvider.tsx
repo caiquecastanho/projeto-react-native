@@ -18,6 +18,7 @@ export default class AuthContextProvider extends React.Component<any, AuthContex
         return new Promise(async (resolve, reject) => {
             try{
                 const loginReponse: LoginResponse = await LoginController.login(email, password);
+
                 this.setState({
                         name: loginReponse.name, 
                         phone: loginReponse.phone, 
@@ -35,7 +36,7 @@ export default class AuthContextProvider extends React.Component<any, AuthContex
     }
 
     providerLogOff = async(): Promise<void> => {
-
+        this.setState({isLogged: false});
     }
 
     render(){

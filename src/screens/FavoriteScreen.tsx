@@ -9,6 +9,9 @@ export default class FavoriteScreen extends React.Component<any, ProductsScreenS
     constructor(props: any){
         super(props);
         this.state = {products: [], isLoading: false}
+        this.props.navigation.addListener('focus', () => {
+            this.loadFavorites();  
+          });
     }
 
     async loadFavorites(): Promise<void>{

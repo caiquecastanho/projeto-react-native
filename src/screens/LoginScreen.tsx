@@ -2,14 +2,14 @@ import React from "react";
 import { View, Text, SafeAreaView } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { TextInput, Button, ActivityIndicator } from "@react-native-material/core";
+import { TextInput, Button, ActivityIndicator, Snackbar } from "@react-native-material/core";
 import {AuthContext, AuthContextType} from "../contexts/AuthContext";
 
 export default class LoginScreen extends React.Component<LoginProps, LoginState> {
 
   constructor(props: LoginProps) {
     super(props);
-    this.state = {isLoading: false };
+    this.state = {isLoading: false, onLoginError: false };
   }
 
   async login(email: string, password: string): Promise<void>{
@@ -17,8 +17,9 @@ export default class LoginScreen extends React.Component<LoginProps, LoginState>
       const {authContextLogin} = this.context as AuthContextType;
       this.setState({isLoading: true});
       await authContextLogin(email, password);
-      //this.props.navigation.navigate('Products');
     }catch(error){
+      this.setState({isLoading: false, onLoginError: true});
+      setTimeout(() => this.setState({onLoginError: false}), 3000);
       console.log("Erro ao executar login");
     }
   }
@@ -120,6 +121,12 @@ export default class LoginScreen extends React.Component<LoginProps, LoginState>
           </>
         )}
       </Formik>
+      {this.state.onLoginError && 
+            <Snackbar
+              message="Usuário ou senha inválidos"
+              style={{ position: "absolute", start: 16, end: 16, bottom: 48 }}
+            />
+      }
     </SafeAreaView>
     );
   }
@@ -138,6 +145,7 @@ LoginScreen.contextType = AuthContext;
 
 interface LoginState {
   isLoading: boolean;
+  onLoginError: boolean;
 }
 
 export type LoginProps = {

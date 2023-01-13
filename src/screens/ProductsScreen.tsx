@@ -14,6 +14,9 @@ export default class ProductsScreen extends React.Component<any,ProductsScreenSt
     super(props);
     this.state = { products: [], isLoading: false, totalItems: 0 };
     this.offset = 1;
+    this.props.navigation.addListener('focus', () => {
+      this.loadProductsList(true);  
+    });
   }
 
   componentDidMount(): void {

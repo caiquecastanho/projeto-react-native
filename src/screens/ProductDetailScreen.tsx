@@ -1,4 +1,4 @@
-import { ActivityIndicator } from "@react-native-material/core";
+import { ActivityIndicator, Snackbar } from "@react-native-material/core";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { addFavorite, getProduct, ItemProduct } from "../service/ProductService";
@@ -12,7 +12,7 @@ export default class ProductDetailScreen extends React.Component<{product: ItemP
 
     constructor(props: any){
         super(props);
-        this.state = {product: null, isLoading: false, isFavorite: false, lat: 0, longi: 0};
+        this.state = {product: null, isLoading: false, isFavorite: false, lat: 0, longi: 0, favoriteUpdated: false};
     }
 
     componentDidMount(): void {
@@ -44,7 +44,8 @@ export default class ProductDetailScreen extends React.Component<{product: ItemP
         try{
             this.setState({isLoading: true});
             await addFavorite(product!._id, token);
-            this.setState({isFavorite: !this.state.isFavorite, isLoading: false});
+            this.setState({isFavorite: !this.state.isFavorite, isLoading: false, favoriteUpdated: true});
+            setTimeout(() => this.setState({favoriteUpdated: false}), 3000);
         }catch(error){
             console.log('Erro ao adicionar aos favoritos');
         }
@@ -99,6 +100,12 @@ export default class ProductDetailScreen extends React.Component<{product: ItemP
                             />
                         </MapView>     
                     </View>
+                    {this.state.favoriteUpdated && 
+                        <Snackbar
+                          message="Favorito atualizado"
+                          style={{ position: "absolute", start: 16, end: 16, bottom: 48 }}
+                        />
+                    }
                 </View>
             </>
         );
@@ -123,6 +130,7 @@ type ProductScreenState = {
     isFavorite: boolean,
     lat: number,
     longi: number,
+    favoriteUpdated: boolean
 }
 
 const styles = StyleSheet.create({
